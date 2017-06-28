@@ -17,7 +17,7 @@ replies = {
 }
 
 proxy_url = "http://proxy.server:3128"
-KEY = '297564683:AAHq3cetrsnUehJO1zFqMIAgVYNg9gVh5Lg'
+KEY = 'TOKEN'
 telepot.api._pools = {
     'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
 }

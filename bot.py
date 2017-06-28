@@ -17,7 +17,7 @@ replies = {
 }
 
 proxy_url = "http://proxy.server:3128"
-KEY = '297564683:AAHq3cetrsnUehJO1zFqMIAgVYNg9gVh5Lg'
+KEY = 'YOUR_KEY'
 telepot.api._pools = {
     'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
 }
@@ -25,12 +25,12 @@ telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url
 
 secret = "42"
 bot = telepot.Bot(KEY)
-bot.setWebhook("https://eyedema.pythonanywhere.com/{}".format(secret), max_connections=1)
+bot.setWebhook("https://YOUR_USERNAME.pythonanywhere.com/{}".format(secret), max_connections=1)
 
 app = Flask(__name__)
 
 def load_obj(name):
-    with open('/home/Eyedema/obj/' + name + '.pkl', 'rb') as f:
+    with open('/home/YOUR_USERNAME/obj/' + name + '.pkl', 'rb') as f:
         return pickle.load(f)
 
 listaStradeFi = load_obj('listaFi')

@@ -8,6 +8,7 @@ Contattare il bot su [Telegram](https://telegram.org/) a [@LuckyCloverBot](https
 
 ### Info
 
+Bot basato su [Telepot](https://github.com/nickoala/telepot).
 Per ogni domanda potete contattarmi a [@Eyedema](https://t.me/eyedema).
 
 ## Inglese
@@ -19,4 +20,5 @@ Contant the bot on [Telegram](https://telegram.org/) at [@LuckyCloverBot](https:
 
 ### Info
 
+Bot based on [Telepot](https://github.com/nickoala/telepot).
 If you have any questions feel free to contact me at [@Eyedema](https://t.me/eyedema).

@@ -17,7 +17,7 @@ replies = {
 }
 
 proxy_url = "http://proxy.server:3128"
-KEY = 'TOKEN'
+KEY = '297564683:AAHq3cetrsnUehJO1zFqMIAgVYNg9gVh5Lg'
 telepot.api._pools = {
     'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
 }
@@ -52,9 +52,9 @@ def hours_alert(date):
     return (abs((d2 - datetime.today()).days)*24) - hours
 
 def get_schedule(dayN, nthDay):
-	this_month_schedule = calendar.Calendar(dayN).monthdatescalendar(datetime.today().year, datetime.today().month)[nthDay][0]
-	next_month_schedule = calendar.Calendar(dayN).monthdatescalendar(datetime.today().year, datetime.today().month+1)[nthDay][0]
-	return str(this_month_schedule) if this_month_schedule > datetime.today().date() else str(next_month_schedule)
+    this_month_schedule = calendar.Calendar(dayN).monthdatescalendar(datetime.today().year, datetime.today().month)[nthDay][0]
+    next_month_schedule = calendar.Calendar(dayN).monthdatescalendar(datetime.today().year, datetime.today().month+1)[nthDay][0]
+    return str(this_month_schedule) if this_month_schedule > datetime.today().date() else str(next_month_schedule)
 
 def send_message(chat_id, dayN, nthDay):
     schedule = get_schedule(dayN, nthDay)
@@ -62,7 +62,28 @@ def send_message(chat_id, dayN, nthDay):
     bot.sendMessage(chat_id, "{} {}\nOrario 00.00 - 06.00".format(calendar.day_name[dayN], get_schedule(dayN, nthDay)))
     bot.sendMessage(chat_id, "/alert "+str(alert)+"h Spostare la macchina.")
 
+def check_florence(chat_id, msg, strada):
+    testoMessaggio = "Firenze:\n\n"
+    for tag in listaStradeFi:
+        if tag.split(' ', 1)[0] == strada:
+            testoMessaggio += "🔴  "+tag+"\n"
+    if testoMessaggio != "Firenze:\n\n":
+        bot.sendMessage(chat_id, testoMessaggio)
+        return 1
+    return 0
+
+def check_sesto(chat_id, msg, strada):    
+    testoMessaggio = "Sesto Fiorentino:\n\n"
+    for tag in listaStradeSf:
+        if tag.split(' ', 1)[0] == strada:
+            testoMessaggio += "🔴  "+tag+"\n"
+    if testoMessaggio != "Sesto Fiorentino:\n\n":
+        bot.sendMessage(chat_id, testoMessaggio)
+        return 1
+    return 0
+
 def parse_message(chat_id, text):
+    msg = 0
     try:
         text.decode('ascii')
     except (UnicodeEncodeError, UnicodeDecodeError), e:
@@ -70,19 +91,9 @@ def parse_message(chat_id, text):
         strada = remove_accents(stradaX)
     else:
         strada = build_string(text)
-    testoMessaggio = "Firenze:\n\n"
-    for tag in listaStradeFi:
-        if tag.split(' ', 1)[0] == strada:
-            testoMessaggio += "🔴  "+tag+"\n"
-    if testoMessaggio != "Firenze:\n\n":
-        bot.sendMessage(chat_id, testoMessaggio)
-    testoMessaggio = "Sesto Fiorentino:\n\n"
-    for tag in listaStradeSf:
-        if tag.split(' ', 1)[0] == strada:
-            testoMessaggio += "🔴  "+tag+"\n"
-    if testoMessaggio != "Firenze:\n\nSesto Fiorentino:\n\n" and testoMessaggio != "Sesto Fiorentino:\n\n" :
-        bot.sendMessage(chat_id, testoMessaggio)
-    else:
+    msg += check_florence(chat_id, msg, strada)
+    msg += check_sesto(chat_id, msg, strada)
+    if msg == 0:
         bot.sendMessage(chat_id, "Strada non trovata")
 
 def welcome(chat_id):

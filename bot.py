@@ -26,7 +26,7 @@ telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url
 secret = "42"
 bot = telepot.Bot(KEY)
 bot.setWebhook("https://XXXXX.pythonanywhere.com/{}".format(secret), max_connections=1)
-bot.sendMessage(23616716, "✅  Bot started.")
+bot.sendMessage(999999, "✅  Bot started.")
 app = Flask(__name__)
 
 def load_obj(name):

@@ -17,7 +17,7 @@ replies = {
 }
 
 proxy_url = "http://proxy.server:3128"
-KEY = 'YOUR_KEY'
+KEY = '297564683:AAHqXXXXXXXXXFqMIAgVYNg9gVh5Lg'
 telepot.api._pools = {
     'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
 }
@@ -25,16 +25,20 @@ telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url
 
 secret = "42"
 bot = telepot.Bot(KEY)
-bot.setWebhook("https://YOUR_USERNAME.pythonanywhere.com/{}".format(secret), max_connections=1)
-
+bot.setWebhook("https://XXXXX.pythonanywhere.com/{}".format(secret), max_connections=1)
+bot.sendMessage(23616716, "✅  Bot started.")
 app = Flask(__name__)
 
 def load_obj(name):
-    with open('/home/YOUR_USERNAME/obj/' + name + '.pkl', 'rb') as f:
+    with open('/home/Eyedema/obj/' + name + '.pkl', 'rb') as f:
         return pickle.load(f)
 
 listaStradeFi = load_obj('listaFi')
 listaStradeSf = load_obj('listaSf')
+
+def write_log(text, name, userID):
+    with open('/home/XXXXXX/obj/botlog.log', 'a+') as file:
+        file.write(':: {:%Y-%b-%d %H:%M:%S} '.format(datetime.now())+name+' (ID:'+str(userID)+') searched for '+text+'\n')
 
 def build_string(suffix):
     suffix = suffix.upper()
@@ -49,7 +53,7 @@ def hours_alert(date):
     d1 = datetime.strptime(date, '%Y-%m-%d')
     d2 = d1 - timedelta(days=1)
     hours = (datetime.now().hour) - 7
-    return (abs((d2 - datetime.today()).days)*24) - hours
+    return abs((d2 - datetime.today()).days*24 - hours)
 
 def get_schedule(dayN, nthDay):
     this_month_schedule = calendar.Calendar(dayN).monthdatescalendar(datetime.today().year, datetime.today().month)[nthDay][0]
@@ -59,7 +63,7 @@ def get_schedule(dayN, nthDay):
 def send_message(chat_id, dayN, nthDay):
     schedule = get_schedule(dayN, nthDay)
     alert = hours_alert(schedule)
-    bot.sendMessage(chat_id, "{} {}\nOrario 00.00 - 06.00".format(calendar.day_name[dayN], get_schedule(dayN, nthDay)))
+    bot.sendMessage(chat_id, "{} {}\nOrario 00.00 - 06.00".format(calendar.day_name[dayN], schedule))
     bot.sendMessage(chat_id, "/alert "+str(alert)+"h Spostare la macchina.")
 
 def check_florence(chat_id, msg, strada):
@@ -72,7 +76,7 @@ def check_florence(chat_id, msg, strada):
         return 1
     return 0
 
-def check_sesto(chat_id, msg, strada):    
+def check_sesto(chat_id, msg, strada):
     testoMessaggio = "Sesto Fiorentino:\n\n"
     for tag in listaStradeSf:
         if tag.split(' ', 1)[0] == strada:
@@ -82,7 +86,8 @@ def check_sesto(chat_id, msg, strada):
         return 1
     return 0
 
-def parse_message(chat_id, text):
+def parse_message(chat_id, update):
+    text = update["message"]["text"]
     msg = 0
     try:
         text.decode('ascii')
@@ -95,22 +100,35 @@ def parse_message(chat_id, text):
     msg += check_sesto(chat_id, msg, strada)
     if msg == 0:
         bot.sendMessage(chat_id, "Strada non trovata")
+    write_log(update["message"]["text"], update["message"]["from"]["first_name"], chat_id)
 
 def welcome(chat_id):
     bot.sendMessage(chat_id,replies['help'])
+
+def send_info(update):
+    message = "Chat ID: "+str(update["message"]["chat"]["id"])+"\nChat type: "+update["message"]["chat"]["type"]
+    bot.sendMessage(update["message"]["chat"]["id"], message)
+    write_log(update["message"]["text"], update["message"]["from"]["first_name"],update["message"]["chat"]["id"])
 
 @app.route('/{}'.format(secret), methods=["POST"])
 def telegram_webhook():
     update = request.get_json()
     if "message" in update:
-        text = update["message"]["text"]
-        chat_id = update["message"]["chat"]["id"]
-        if text == '/greco':
-            send_message(chat_id, 4,1)
-        elif text == '/kyoto':
-            send_message(chat_id, 6,2)
-        elif text == '/start':
-            welcome(chat_id)
-        else:
-            parse_message(chat_id, text)
+        try:
+            text = update["message"]["text"]
+            chat_id = update["message"]["chat"]["id"]
+            if text == '/greco' or text == '/greco@LuckyCloverBot':
+                send_message(chat_id, 4,1)
+            elif text == '/kyoto' or text == '/kyoto@LuckyCloverBot':
+                send_message(chat_id, 6,2)
+            elif text == '/start':
+                welcome(chat_id)
+            elif text == '/getinfo' and update["message"]["from"]["id"] == 999999:
+                send_info(update)
+            elif text.split()[0] == '@LuckyCloverBot':
+                parse_message(chat_id, update)
+            elif update["message"]["chat"]["type"] == 'private':
+                parse_message(chat_id, update)
+        except KeyError:
+            pass
     return "OK"

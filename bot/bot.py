@@ -15,32 +15,22 @@ replies = {
     'nei comuni di Firenze e Sesto Fiorentino. Per avere informazioni su una strada '
     'mandare semplicemente il nome della stessa a questo bot.',
 }
-
-<<<<<<< Updated upstream
-proxy_url = "http://XXXXXXXX"
-KEY = '297564683:AAHqXXXXXXXXXFqMIXXXXXXh5Lg'
-=======
+my_id = 999999
 proxy_url = "http://proxy.server:3128"
-KEY = '297564683:AAHq3cetrsnUehJO1zFqMIAgVYNg9gVh5Lg'
->>>>>>> Stashed changes
+KEY = '297564683:XXXXXXXXXXXXXXXXX'
 telepot.api._pools = {
     'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
 }
 telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url, num_pools=1, maxsize=1, retries=False, timeout=30))
 
-secret = "42"
+secret = "XXXXXXXXXXXXXXXXXXXXX"
 bot = telepot.Bot(KEY)
-<<<<<<< Updated upstream
-bot.setWebhook("https://XXXXX.XXXXXX.com/{}".format(secret), max_connections=1)
-bot.sendMessage(999999, "✅  Bot started.")
-=======
 bot.setWebhook("https://eyedema.pythonanywhere.com/{}".format(secret), max_connections=1)
-bot.sendMessage(23616716, "✅  Bot started.")
->>>>>>> Stashed changes
+bot.sendMessage(my_id, "✅  Bot started.")
 app = Flask(__name__)
 
 def load_obj(name):
-    with open('XXXXXXX' + name + '.pkl', 'rb') as f:
+    with open('/home/Eyedema/obj/' + name + '.pkl', 'rb') as f:
         return pickle.load(f)
 
 listaStradeFi = load_obj('listaFi')
@@ -133,7 +123,7 @@ def telegram_webhook():
                 send_message(chat_id, 6,2)
             elif text == '/start':
                 welcome(chat_id)
-            elif text == '/getinfo' and update["message"]["from"]["id"] == 23616716:
+            elif text == '/getinfo' and update["message"]["from"]["id"] == my_id:
                 send_info(update)
             elif text.split()[0] == '@LuckyCloverBot':
                 parse_message(chat_id, update)

@@ -13,11 +13,16 @@ sys.setdefaultencoding('utf8')
 replies = {
     'help': 'Questo bot da informazioni sul calendario della pulizia delle strade '
     'nei comuni di Firenze e Sesto Fiorentino. Per avere informazioni su una strada '
-    'mandare semplicemente il nome della stessa a questo bot.',   
+    'mandare semplicemente il nome della stessa a questo bot.',
 }
 
+<<<<<<< Updated upstream
 proxy_url = "http://XXXXXXXX"
 KEY = '297564683:AAHqXXXXXXXXXFqMIXXXXXXh5Lg'
+=======
+proxy_url = "http://proxy.server:3128"
+KEY = '297564683:AAHq3cetrsnUehJO1zFqMIAgVYNg9gVh5Lg'
+>>>>>>> Stashed changes
 telepot.api._pools = {
     'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
 }
@@ -25,8 +30,13 @@ telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url
 
 secret = "42"
 bot = telepot.Bot(KEY)
+<<<<<<< Updated upstream
 bot.setWebhook("https://XXXXX.XXXXXX.com/{}".format(secret), max_connections=1)
 bot.sendMessage(999999, "✅  Bot started.")
+=======
+bot.setWebhook("https://eyedema.pythonanywhere.com/{}".format(secret), max_connections=1)
+bot.sendMessage(23616716, "✅  Bot started.")
+>>>>>>> Stashed changes
 app = Flask(__name__)
 
 def load_obj(name):
@@ -37,7 +47,7 @@ listaStradeFi = load_obj('listaFi')
 listaStradeSf = load_obj('listaSf')
 
 def write_log(text, name, userID):
-    with open('/home/XXXXXX/obj/botlog.log', 'a+') as file:
+    with open('/home/Eyedema/obj/botlog.log', 'a+') as file:
         file.write(':: {:%Y-%b-%d %H:%M:%S} '.format(datetime.now())+name+' (ID:'+str(userID)+') searched for '+text+'\n')
 
 def build_string(suffix):
@@ -123,7 +133,7 @@ def telegram_webhook():
                 send_message(chat_id, 6,2)
             elif text == '/start':
                 welcome(chat_id)
-            elif text == '/getinfo' and update["message"]["from"]["id"] == 999999:
+            elif text == '/getinfo' and update["message"]["from"]["id"] == 23616716:
                 send_info(update)
             elif text.split()[0] == '@LuckyCloverBot':
                 parse_message(chat_id, update)

@@ -13,7 +13,8 @@ sys.setdefaultencoding('utf8')
 replies = {
     'help': 'Questo bot da informazioni sul calendario della pulizia delle strade '
     'nei comuni di Firenze e Sesto Fiorentino. Per avere informazioni su una strada '
-    'mandare semplicemente il nome della stessa a questo bot.',
+    'mandare semplicemente il nome della stessa a questo bot. Se il bot si trova in '
+    'una chat, il messaggio deve contenere come prima parola "@LuckyCloverBot".',
 }
 my_id = 999999
 proxy_url = "http://proxy.server:3128"

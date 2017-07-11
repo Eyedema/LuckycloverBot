@@ -18,7 +18,7 @@ replies = {
     'mandare semplicemente il nome della stessa a questo bot.',
 }
 proxy_url = "http://proxy.server:3128"
-KEY = '297564683:XXXXXXX'
+KEY = '297564683:AAHq3cetrsnUehJO1zFqMIAgVYNg9gVh5Lg'
 telepot.api._pools = {
     'default': urllib3.ProxyManager(proxy_url=proxy_url, num_pools=3, maxsize=10, retries=False, timeout=30),
 }
@@ -27,7 +27,7 @@ telepot.api._onetime_pool_spec = (urllib3.ProxyManager, dict(proxy_url=proxy_url
 secret = "42"
 bot = telepot.Bot(KEY)
 bot.setWebhook("https://eyedema.pythonanywhere.com/{}".format(secret), max_connections=1)
-bot.sendMessage(999999, "✅  Bot started.")
+bot.sendMessage(23616716, "✅  Bot started.")
 app = Flask(__name__)
 
 
@@ -108,7 +108,7 @@ def send_info(update):
 def send_message(update):
     text = bot_parser.parse_update(update)[0]
     if len(text.split())>2:
-        bot.sendMessage(text.split()[1], "".join(text.split()[2:]))
+        bot.sendMessage(text.split()[1], " ".join(text.split()[2:]))
 
 @app.route('/{}'.format(secret), methods=["POST"])
 def telegram_webhook():
@@ -123,13 +123,13 @@ def telegram_webhook():
                 send_schedule(update, 6,2)
             elif text == '/start':
                 welcome(update)
-            elif text == '/getinfo' and  from_id== 99999:
+            elif text == '/getinfo' and  from_id== 23616716:
                 send_info(update)
             elif text.split()[0] == '@LuckyCloverBot':
                 parse_message(update)
-            elif text == '/getlist' and from_id == 99999:
-                bot.sendMessage(99999, bot_parser.get_broadcast())
-            elif text.split()[0] == '/send' and from_id == 999999:
+            elif text == '/getlist' and from_id == 23616716:
+                bot.sendMessage(23616716, bot_parser.get_broadcast())
+            elif text.split()[0] == '/send' and from_id == 23616716:
                 send_message(update)
             elif update["message"]["chat"]["type"] == 'private':
                 parse_message(update)

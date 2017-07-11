@@ -1,5 +1,7 @@
 # LuckycloverBot
 
+TODO: salvare chat di tutti gli iscritti per inviare messaggi broadcast
+
 ## Italiano
 
 Questo bot da informazioni sul calendario della pulizia delle strade nei comuni di Firenze e Sesto Fiorentino. Per avere informazioni su una strada mandare semplicemente il nome della stessa a questo bot.

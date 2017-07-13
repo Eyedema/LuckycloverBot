@@ -12,9 +12,11 @@ urlSf = 'http://www.quadrifoglio.org/scrivi_orario_strade_tutte.php?comune=SESTO
 listaFi = []
 listaSf = []
 
+
 def save_obj(obj, name):
-    with open('obj/'+ name + '.pkl', 'wb') as f:
+    with open('obj/' + name + '.pkl', 'wb') as f:
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+
 
 print "Florence schedule download started."
 start_time = time.time()

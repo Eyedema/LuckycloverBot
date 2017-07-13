@@ -39,31 +39,20 @@ def load_obj(name):
 listaStradeFi = load_obj('listaFi')
 listaStradeSf = load_obj('listaSf')
 
-def write_log(update):
-    username = "---"
-    try:
-        username = update["message"]["from"]["username"]
-    except Exception:
-        pass
-    text, chat_id, name = bot_parser.parse_update(update)
-    with open('/home/Eyedema/luckycloverbot/obj/botlog.log', 'a+') as file:
-        file.write(':: {:%Y-%b-%d %H:%M:%S} '.format(datetime.now())+name+' @'+username+' (ID:'+str(chat_id)+') searched for '+text+'\n')
-    bot_parser.add_to_broadcast(update)
-
 def send_schedule(update, dayN, nthDay):
     chat_id = bot_parser.parse_update(update)[1]
     schedule = bot_parser.get_schedule(dayN, nthDay)
     alert = bot_parser.hours_alert(schedule)
     bot.sendMessage(chat_id, "{} {}\nOrario 00.00 - 06.00".format(calendar.day_name[dayN], schedule))
-    bot.sendMessage(chat_id, "/alert "+str(alert)+"h Spostare la macchina.")
-    write_log(update)
+    bot.sendMessage(chat_id, "/alert {}h Spostare la macchina.".format(str(alert)))
+    bot_parser.write_log(update)
 
 
 def check_florence(chat_id, msg, strada):
     testoMessaggio = "Firenze:\n\n"
     for tag in listaStradeFi:
         if tag.split(' ', 1)[0] == strada:
-            testoMessaggio += "🔴  "+tag+"\n"
+            testoMessaggio += "🔴  {}\n".format(tag)
     if testoMessaggio != "Firenze:\n\n":
         bot.sendMessage(chat_id, testoMessaggio)
         return 1
@@ -73,7 +62,7 @@ def check_sesto(chat_id, msg, strada):
     testoMessaggio = "Sesto Fiorentino:\n\n"
     for tag in listaStradeSf:
         if tag.split(' ', 1)[0] == strada:
-            testoMessaggio += "🔴  "+tag+"\n"
+            testoMessaggio += "🔴  {}\n".format(tag)
     if testoMessaggio != "Sesto Fiorentino:\n\n":
         bot.sendMessage(chat_id, testoMessaggio)
         return 1
@@ -93,17 +82,17 @@ def parse_message(update):
     msg += check_sesto(chat_id, msg, strada)
     if msg == 0:
         bot.sendMessage(chat_id, "Strada non trovata")
-    write_log(update)
+    bot_parser.write_log(update)
 
 def welcome(update):
     bot.sendMessage(bot_parser.parse_update(update)[1],replies['help'])
-    write_log(update)
+    bot_parser.write_log(update)
 
 
 def send_info(update):
-    message = "Chat ID: "+str(bot_parser.parse_update(update)[1])+"\nChat type: "+update["message"]["chat"]["type"]
+    message = "Chat ID: {}\nChat type: {}".format(str(bot_parser.parse_update(update)[1]), update["message"]["chat"]["type"])
     bot.sendMessage(bot_parser.parse_update(update)[1], message)
-    write_log(update)
+    bot_parser.write_log(update)
 
 def send_message(update):
     text = bot_parser.parse_update(update)[0]

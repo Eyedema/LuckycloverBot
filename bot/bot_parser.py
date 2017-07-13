@@ -45,12 +45,12 @@ def add_to_broadcast(update):
     text, chat_id, name = parse_update(update)
     message = ""
     if update["message"]["chat"]["type"] == 'private':
-        message += str(chat_id) +' '+ name +' @'+ username +'\n'
+        message += "{} {} @{}\n".format(str(chat_id), name, username)
         write_broadcast(message)
     else:
         name = update["message"]["chat"]["title"]
         username = '---'
-        message += str(chat_id) +' '+ name +' @'+ username +'\n'
+        message += "{} {} @{}\n".format(str(chat_id), name, username)
         write_broadcast(message)
 
 def get_broadcast():
@@ -60,3 +60,14 @@ def get_broadcast():
     if message:
         return message
     return "Broadcast list empty."
+
+def write_log(update):
+    username = "---"
+    try:
+        username = update["message"]["from"]["username"]
+    except Exception:
+        pass
+    text, chat_id, name = bot_parser.parse_update(update)
+    with open('/home/Eyedema/luckycloverbot/obj/botlog.log', 'a+') as file:
+        file.write(':: {:%Y-%b-%d %H:%M:%S} {} @{} (ID:{}) searched for {}\n'.format(datetime.now(),name, username, str(chat_id), text)
+    add_to_broadcast(update)

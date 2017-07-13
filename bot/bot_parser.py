@@ -67,7 +67,7 @@ def write_log(update):
         username = update["message"]["from"]["username"]
     except Exception:
         pass
-    text, chat_id, name = bot_parser.parse_update(update)
+    text, chat_id, name = parse_update(update)
     with open('/home/Eyedema/luckycloverbot/obj/botlog.log', 'a+') as file:
         file.write(':: {:%Y-%b-%d %H:%M:%S} {} @{} (ID:{}) searched for {}\n'.format(datetime.now(),name, username, str(chat_id), text))
     add_to_broadcast(update)

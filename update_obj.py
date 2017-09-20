@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 import pickle
 import urllib2
 import time
+import anywhereselenium
 
 
 urlFi = 'http://www.quadrifoglio.org/scrivi_orario_strade_tutte.php?comune=FIRENZE'
@@ -41,3 +42,6 @@ save_obj(listaFi, 'listaFi')
 save_obj(listaSf, 'listaSf')
 time.sleep(0.5)
 print "Pickles saved in /obj."
+
+automate()
+

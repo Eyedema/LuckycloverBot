@@ -1,9 +1,12 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from data import USERNAME, PASSWORD
 
 
 def automate():
-    driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome(chrome_options=chrome_options)
     driver.get("http://www.pythonanywhere.com/")
     login = driver.find_element_by_id("id_login_link")
     login.click()
@@ -31,5 +34,6 @@ def automate():
     reload_app.click()
     import time
     time.sleep(30)
+    import sys
+    sys.exit()
     driver.close()
-

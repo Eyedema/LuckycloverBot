@@ -5,11 +5,14 @@ from bs4 import BeautifulSoup
 import pickle
 import urllib2
 import time
+import threading
 import anywhereselenium
 
 
 urlFi = 'http://www.quadrifoglio.org/scrivi_orario_strade_tutte.php?comune=FIRENZE'
 urlSf = 'http://www.quadrifoglio.org/scrivi_orario_strade_tutte.php?comune=SESTO%20FIORENTINO'
+start = time.time()
+urls = [urlFi, urlSf]
 listaFi = []
 listaSf = []
 
@@ -19,29 +22,26 @@ def save_obj(obj, name):
         pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
 
 
-print "Florence schedule download started."
-start_time = time.time()
-htmlFi = urllib2.urlopen(urlFi).read().decode('UTF-8')
-print "Florence schedule download complete."
-time.sleep(0.5)
-print "Sesto Fiorentino schedule download started."
-htmlSf = urllib2.urlopen(urlSf).read().decode('UTF-8')
-print "Sesto Fiorentino schedule download complete."
-print "Download completed in {} seconds.\nSaving pickles...".format(time.time() - start_time)
+def fetch_url(url):
+    urlHandler = urllib2.urlopen(url)
+    html = urlHandler.read().decode('UTF-8')
+    print "'%s\' fetched in %ss\nParsing html..." % (url, (time.time() - start))
+    soup = BeautifulSoup(html, "lxml")
+    for tag in soup.find_all('div'):
+		if url == urlFi:
+		    listaFi.append(tag.text)
+		    save_obj(listaFi, 'listaFi')
+		else:
+			listaSf.append(tag.text)
+			save_obj(listaSf, 'listaSf')
 
-soupFi = BeautifulSoup(htmlFi, "lxml")
-soupSf = BeautifulSoup(htmlSf, "lxml")
 
-for tag in soupFi.find_all('div'):
-    listaFi.append(tag.text)
+threads = [threading.Thread(target=fetch_url, args=(url,)) for url in urls]
+for thread in threads:
+    thread.start()
+for thread in threads:
+    thread.join()
 
-for tag in soupSf.find_all('div'):
-    listaSf.append(tag.text)
-
-save_obj(listaFi, 'listaFi')
-save_obj(listaSf, 'listaSf')
-time.sleep(0.5)
+print "Elapsed Time: %s" % (time.time() - start)
 print "Pickles saved in /obj."
-
-automate()
-
+anywhereselenium.automate()
